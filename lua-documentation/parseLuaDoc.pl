@@ -9,7 +9,7 @@ use Data::Dumper;
 use File::Slurp;
 use File::Spec;
 use Text::Trim;
-use String::Escape qw( list2string );
+
 
 
 sub parseFile {
