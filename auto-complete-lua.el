@@ -1413,8 +1413,32 @@ Return `nil' if LUA-SYMBOL doesn't exists in
   (let ((lua-symbol-string (substring-no-properties lua-symbol)))
     (cdr (assoc lua-symbol-string auto-complete-lua--builtin-functions))))
 
+(defun auto-complete-lua--calculate-beginning-of-word ()
+  (let ((word-start-regexp "\\<"))      ; The regexp that detects the
+                                        ; beginning of a word
+
+    ;; The `lua-mode' syntax table considers the "." character as a
+    ;; puntuation character. This causes `word-start-regexp' to assume
+    ;; "format" is the start of a word, instead however, to correctly
+    ;; perform the auto-complete it should think that the word starts
+    ;; at "string.format" instead. As a workaround this buffer's
+    ;; syntax-table is temporarily modified so it considers "." as
+    ;; belonging to word. This makes `word-start-regexp' return think
+    ;; that the word starts at "string.format" instead of "format".
+    (with-syntax-table (copy-syntax-table)
+      (modify-syntax-entry ?. "w")
+      ;; Move point to the start of the current word, unless point is
+      ;; already there because then moving the point would mean that
+      ;; auto-complete would try to auto complete the word *behind*
+      ;; the word where the pointer is.
+      (unless (looking-at word-start-regexp)
+        (backward-word))
+      ;; Point is now at the first character of word
+      (point))))
+
 (defvar ac-source-lua
   '((candidates . auto-complete-lua--get-lua-builtin-functions)
+     (prefix . auto-complete-lua--calculate-beginning-of-word)
      (document . auto-complete-lua--get-documentation)
      (cache))
   "A auto-complete.el source for the builtin lua functions.")
