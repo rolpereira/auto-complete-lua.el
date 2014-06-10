@@ -1419,9 +1419,9 @@ Return `nil' if LUA-SYMBOL doesn't exists in
 
     ;; The `lua-mode' syntax table considers the "." character as a
     ;; puntuation character. This causes `word-start-regexp' to assume
-    ;; "format" is the start of a word, instead however, to correctly
-    ;; perform the auto-complete it should think that the word starts
-    ;; at "string.format" instead. As a workaround this buffer's
+    ;; "format" is the start of a word, however, to correctly perform
+    ;; the auto-complete it should think that the word starts at
+    ;; "string.format" instead. As a workaround this buffer's
     ;; syntax-table is temporarily modified so it considers "." as
     ;; belonging to word. This makes `word-start-regexp' return think
     ;; that the word starts at "string.format" instead of "format".
